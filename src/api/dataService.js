@@ -27,4 +27,23 @@ export default {
   register(req){
     return doGetRequest('user/register',req)
   },
+  getOrder(req){
+    return doGetRequest('order/getOrder',req)
+  },
+  getVehicleInformation(req){
+    return doGetRequest('/vehicle/information',req)
+  },
+  getVehicleConfiguration(req){
+    return doGetRequest('/vehicle/configuration',req)
+  },
+  //价格
+  getPrice(req){
+    return doGetRequest('/price/getPrice',req)
+  },
+  getPriceAdd(req){
+    return doGetRequest('/price/add',req)
+  },
+  getPriceUpdate(req){
+    return doGetRequest('/price/update',req)
+  }
 }

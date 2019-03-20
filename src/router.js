@@ -4,9 +4,11 @@ import Login from './components/Login.vue'
 import Nav from './views/nav.vue'
 import DoneOrder from './views/order/doneOrder.vue'
 import DoingOrder from './views/order/doingOrder.vue'
-import ErrorOrder from './views/order/errorOrder.vue'
-import Customer from './views/customer/index.vue'
+import HandleOrder from './views/order/handleOrder.vue'
 import Vehicle from './views/vehicle/index.vue'
+import VehicleStatus from './views/vehicle/vehicleStatus.vue'
+import Price from './views/price/index.vue'
+import Customer from './views/customer/index.vue'
 import NotFound from './views/404.vue'
 Vue.use(Router)
 
@@ -24,10 +26,14 @@ export default new Router({
         // 订单管理
           {path:'DoneOrder', component:DoneOrder},
           {path:'DoingOrder', component:DoingOrder},
-          {path:'ErrorOrder', component:ErrorOrder},
-          //客户管理
-          {path:'Customer', component:Customer},
-          {path:'Vehicle', component:Vehicle}
+          {path:'HandleOrder', component:HandleOrder},
+        // 车辆管理
+          {path:'Vehicle', component:Vehicle},
+          {path:'VehicleStatus',component:VehicleStatus},
+        //计费管理
+           {path:'Price', component:Price},
+        //信息管理
+           {path:'Customer', component:Customer}
         ]
   
     }

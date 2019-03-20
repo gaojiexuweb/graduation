@@ -5,7 +5,7 @@ export default [
         children:[
             {
                 name:'处理订单',
-                url:'/nav/DoingOrder'
+                url:'/nav/HandleOrder'
             },
             {
                 name:'进行订单',
@@ -19,41 +19,35 @@ export default [
     },
     {
         id:'2',
-        name:'用户管理',
+        name:'车辆管理',
         children:[
             {
-                name:'用户列表',
-                url:'/nav/Customer'
+                name:'车辆安排',
+                url:'/nav/Vehicle'
+            },
+            {
+                name:'车辆配置',
+                url:'/nav/VehicleStatus'
             }
         ]
     },
     {
         id:'3',
-        name:'车辆管理',
+        name:'计费管理',
         children:[
             {
-                name:'车辆列表',
-                url:'/nav/Vehicle'
+                name:'价格列表',
+                url:'/nav/Price'
             }
         ]
     },
     {
         id:'4',
-        name:'计费管理',
-        children:[
-            {
-                name:'价格列表',
-                url:'/nav/Vehicle'
-            }
-        ]
-    },
-    {
-        id:'5',
         name:'信息管理',
         children:[
             {
                 name:'个人信息',
-                url:'/nav/Vehicle'
+                url:'/nav/Customer'
             }
         ]
     }

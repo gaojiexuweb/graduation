@@ -1,11 +1,14 @@
 <template>
     <div class="header">
         <!-- 折叠按钮 -->
-        <el-row :gutter=12>
-            <el-col :span="8" class="title">
-              <div class="txt">江苏理工学院无人车管理系统</div>
+        <el-row>
+            <el-col :span="1">
+              <div>&nbsp;</div>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="9">
+              <div>江苏理工学院无人车信息管理系统</div>
+            </el-col>
+            <el-col :span="10">
                 <span>&nbsp;</span>
             </el-col>
             <el-col :span="4">
@@ -32,14 +35,10 @@
     .header {
       background:#434343;
       height: 50px;
-      min-width: 1450px;
       color: white;
       line-height: 50px;
       text-align: left;
       font-size: 18px;
-      .title{
-          margin: 0 100px;
-      }
    }
    
     

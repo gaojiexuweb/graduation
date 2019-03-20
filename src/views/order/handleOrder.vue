@@ -5,13 +5,14 @@
         <Input v-model="value1" icon="ios-search" style="width: 130px;margin-left:10px;" @on-enter="search()"/>
     </div>
         <Table :columns="columns" :data="data" stripe :loading="tableLoading"></Table>
-        <Page :total="total" :current="query.page" :page-size="query.rows" @on-change="search" show-total show-sizer show-elevator @on-page-size-change="pageSizeChangeHandler" placement="top" class="page">
+        <Page :total="total" :current="query.page" :page-size="query.rows" @on-change="search" show-total show-sizer show-elevator @on-page-size-change="pageSizeChangeHandler" placement="top">
         </Page>
-
+        <ModalEdit :open="modalEdit.open" :ok="ok" :cancel="cancel"></ModalEdit>
     </div>
 </template>
 
 <script>
+import ModalEdit from './UpdateModal.vue'
 export default {
     data() {
         return {
@@ -28,15 +29,17 @@ export default {
             query: {
                 page: 1,
                 rows: 10,
-                status: 1 //0.待处理  1.进行中  2.已完成
+                status: 0  //0.待处理  1.进行中  2.已完成
             },
             columns: [{
                     key: 'orderNumber',
-                    title: ' 订单编号'
+                    title: ' 订单编号',
+                    ellipsis: true
                 },
                 {
                     key: 'consignee',
-                    title: '收货人'
+                    title: '收货人',
+                    ellipsis: true
                 },
                 {
                     key: 'contact',
@@ -44,36 +47,56 @@ export default {
                 },
                 {
                     key: 'shippingAddress',
-                    title: '发货地址'
+                    title: '发货地址',
+                    ellipsis: true
                 },
                 {
                     key: 'receivingAddress',
-                    title: ' 收货地址'
+                    title: ' 收货地址',
+                    ellipsis: true
                 },
                 {
-                    key: 'responsible',
-                    title: '负责人'
+                    key: 'orderTime',
+                    title: '下单时间'
                 },
-                {
-                    key: 'servicePhone',
-                    title: '客服电话'
-                },
-                {
-                    key: 'vehicleNumber',
-                    title: '车辆编号'
-                },
-                {
-                    key: 'pickNumber',
-                    title: ' 取件号'
-                },
-                {
-                    key: 'lineArrangement',
-                    title: '线路安排'
-                },
-
                 {
                     key: 'orderMoney',
                     title: '金额(元)'
+                },
+                {
+                    title: '操作',
+                    key: 'action',
+                    width: 150,
+                    align: 'center',
+                    render: (h, params) => {
+                        return h('div', [
+                            h('Button', {
+                                props: {
+                                    type: 'primary',
+                                    size: 'small'
+                                },
+                                style: {
+                                    marginRight: '5px'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.openModalEdit(params)
+                                    }
+                                }
+                            }, '发货'),
+                            h('Button', {
+                                props: {
+                                    type: 'error',
+                                    size: 'small'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.deleteContarct(params)
+                                    }
+                                }
+                            }, '删除')
+                        ]);
+                    }
                 }
             ],
             data: [],
@@ -86,7 +109,7 @@ export default {
                 page: p ? p : this.query.page,
                 rows: this.query.rows,
                 orderNumber: this.value1,
-                status: this.query.status
+                status:this.query.status
             }
             this.query.page = p ? p : this.query.page;
             this.$http.getOrder(req)
@@ -108,16 +131,11 @@ export default {
                                 contact: el.contact,
                                 shippingAddress: el.shippingAddress,
                                 receivingAddress: el.receivingAddress,
-                                orderTime: el.orderTime.slice(0, 10),
-                                responsible: el.responsible,
-                                servicePhone: el.servicePhone,
-                                vehicleNumber: el.vehicleNumber,
-                                pickNumber: el.pickNumber,
-                                lineArrangement: el.lineArrangement,
-                                orderMoney: el.orderMoney
+                                orderMoney: el.orderMoney,
+                                orderTime:el.orderTime.slice(0,10)
                             }
                         })
-                    } else {
+                    }else{
                         this.data = []
                     }
 
@@ -145,30 +163,30 @@ export default {
         },
         // 新增提交
         ok(obj) {
-            let req = {
-                contractNumber: obj.contractNumber,
-                contractName: obj.contractName,
-                customerName: obj.customerName,
-                customerManager: obj.customerManager,
-                signTime: obj.signTime.getTime(),
-                saleManager: obj.saleManager,
-                startTime: obj.startTime.getTime(),
-                expireTime: obj.expireTime.getTime(),
-                contractMoney: obj.contractMoney,
-                attachmentName: obj.attachmentName,
-                attachmentUrl: obj.attachmentUrl
-            }
-            this.$http.getContractAdd(req)
-                .then(res => {
-                    if (res.data.success) {
-                        this.search();
-                        this.add.open = false;
-                        this.$popSuccess('新增合同成功')
-                    }
-                })
+            this.modalEdit.open = false
+            // let req = {
+            //     contractNumber: obj.contractNumber,
+            //     contractName: obj.contractName,
+            //     customerName: obj.customerName,
+            //     customerManager: obj.customerManager,
+            //     signTime: obj.signTime.getTime(),
+            //     saleManager: obj.saleManager,
+            //     startTime: obj.startTime.getTime(),
+            //     expireTime: obj.expireTime.getTime(),
+            //     contractMoney: obj.contractMoney,
+            //     attachmentName: obj.attachmentName,
+            //     attachmentUrl: obj.attachmentUrl
+            // }
+            // this.$http.getContractAdd(req)
+            //     .then(res => {
+            //         if (res.data.success) {
+            //             this.search();
+            //             this.add.open = false;
+            //             this.$popSuccess('新增合同成功')
+            //         }
+            //     })
         },
         cancel() {
-            this.add.open = false;
             this.modalEdit.open = false
         },
         //删除
@@ -201,7 +219,7 @@ export default {
     },
     components: {
         // ContractAdd,
-        // ModalEdit
+        ModalEdit
     }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
 <div class="active">
     <div class="top">
-        <Button type="primary" @click="refresh" icon="refresh">刷新</Button>
+        <Button type="primary" @click="search" icon="refresh">刷新</Button>
         <Button type="primary" @click="openModalAdd" icon="add" style="margin:0 20px;">新增</Button>
         <Input v-model="value1" icon="ios-search" style="width: 130px;margin-left:10px;" @on-enter="search()"/>
     </div>
@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import ModalEdit from './UpdateModal.vue';
-import AddInfoModal from './addInfoModal.vue'
+import ModalEdit from './TypeEditModal.vue';
+import AddInfoModal from './addTypeModal.vue'
 export default {
     data() {
         return {
@@ -35,24 +35,12 @@ export default {
                 status: 0
             },
             columns: [{
+                    key: 'vehicleType',
+                    title: '车辆型号'
+                },
+                {
                     key: 'vehicleNumber',
                     title: '车辆编号'
-                },
-                {
-                    key: 'responsible',
-                    title: '负责人'
-                },
-                {
-                    key: 'lineArrangement',
-                    title: '线路安排'
-                },
-                {
-                    key: 'servicePhone',
-                    title: '客服电话'
-                },
-                {
-                    key: 'status',
-                    title: '状态'
                 },
                 {
                     key: 'largeNumber',
@@ -61,6 +49,22 @@ export default {
                 {
                     key: 'smallNumber',
                     title: ' 小件格数'
+                },
+                {
+                    key: 'color',
+                    title: ' 颜色'
+                },
+                {
+                    key: 'length',
+                    title: ' 长度(cm)'
+                },
+                {
+                    key: 'width',
+                    title: ' 宽度(cm)'
+                },
+                {
+                    key: 'height',
+                    title: ' 高度(cm)'
                 },
                 {
                     title: '操作',
@@ -107,11 +111,10 @@ export default {
             let req = {
                 page: p ? p : this.query.page,
                 rows: this.query.rows,
-                vehicleNumber: this.value1
-                // status: this.query.status
+                vehicleType: this.value1
             }
-            this.query.page = p ? p : this.query.page;
-            this.$http.getVehicleInformation(req)
+            this.query.page = p ? p : this.query.page
+            this.$http.getVehicleConfiguration(req)
                 .then(res => {
                     if (res.data.rows.length == 0) {
                         if (this.query.page > 1) {
@@ -125,19 +128,19 @@ export default {
                     if (res.data.success) {
                         this.data = res.data.rows.map(el => {
                             return {
+                                vehicleType: el.vehicleType,
                                 vehicleNumber: el.vehicleNumber,
-                                responsible: el.responsible,
-                                lineArrangement: el.lineArrangement,
-                                servicePhone: el.servicePhone,
-                                status: el.status,
                                 largeNumber: el.largeNumber,
-                                smallNumber: el.smallNumber
+                                smallNumber: el.smallNumber,
+                                color: el.color,
+                                length: el.length,
+                                width: el.width,
+                                height: el.height
                             }
                         })
                     } else {
                         this.data = []
                     }
-
                     this.total = res.data.records;
 
                 })
@@ -146,10 +149,6 @@ export default {
             this.query.rows = t;
             this.query.page = 1;
             this.search();
-        },
-        refresh() {
-            this.value1 = ''
-            this.search()
         },
         //编辑弹窗打开
         openModalEdit(row) {
@@ -254,6 +253,7 @@ export default {
     .top {
         margin-bottom: 20px;
         text-align: left;
+
     }
 }
 </style>

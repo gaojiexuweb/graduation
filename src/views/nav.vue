@@ -2,8 +2,8 @@
 <div class="show">
     <Header></Header>
     <el-row>
-        <el-col :span="4">
-            <el-menu @select="menuSelect">
+        <el-col :span="4" class="nav">
+            <el-menu @select="menuSelect" background-color="#432E31" text-color="#fff" active-text-color="#ffd04b" class="sider">
                 <template v-for="item in menus">
 
                     <el-menu-item v-if="!item.children" :index="item.url" :key="item.name">
@@ -22,7 +22,7 @@
                 </template>
             </el-menu>
         </el-col>
-        <el-col :span="20">
+        <el-col :span="20" class="view">
             <router-view></router-view>
         </el-col>
     </el-row>
@@ -46,12 +46,23 @@ export default {
             })
         }
     },
-    components:{
-      Header
+    components: {
+        Header
     }
 }
 </script>
 
-<style>
+<style lang="less" scoped>
+.show {
+    .nav {
+        min-height: 500px;
+        .sider{
+            min-height: 606px;
+        }
+    }
 
+    .view {
+        padding: 20px;
+    }
+}
 </style>
