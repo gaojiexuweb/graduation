@@ -5,8 +5,8 @@ import Nav from './views/nav.vue'
 import DoneOrder from './views/order/doneOrder.vue'
 import DoingOrder from './views/order/doingOrder.vue'
 import HandleOrder from './views/order/handleOrder.vue'
-import Vehicle from './views/vehicle/index.vue'
-import VehicleStatus from './views/vehicle/vehicleStatus.vue'
+import mange from './views/vehicle/mange.vue'
+import config from './views/vehicle/config.vue'
 import Price from './views/price/index.vue'
 import Customer from './views/customer/index.vue'
 import NotFound from './views/404.vue'
@@ -17,7 +17,7 @@ export default new Router({
   // base: process.env.BASE_URL,
   routes: [
     {path: '/', redirect: '/login'},
-    {path:'/login',name:'login',component:Login},
+    {path:'/login',name:'login',component:Login,meta:{KeepAlive:true}},
     {path:'*',name:'/404',component:NotFound},
     {path:'/nav',name:"nav",component:Nav,
     children:
@@ -28,8 +28,8 @@ export default new Router({
           {path:'DoingOrder', component:DoingOrder},
           {path:'HandleOrder', component:HandleOrder},
         // 车辆管理
-          {path:'Vehicle', component:Vehicle},
-          {path:'VehicleStatus',component:VehicleStatus},
+          {path:'mange', component:mange},
+          {path:'config',component:config},
         //计费管理
            {path:'Price', component:Price},
         //信息管理

@@ -23,11 +23,11 @@ export default [
         children:[
             {
                 name:'车辆安排',
-                url:'/nav/Vehicle'
+                url:'/nav/mange'
             },
             {
                 name:'车辆配置',
-                url:'/nav/VehicleStatus'
+                url:'/nav/config'
             }
         ]
     },

@@ -29,7 +29,7 @@ export default {
             query: {
                 page: 1,
                 rows: 10,
-                status: 0  //0.待处理  1.进行中  2.已完成
+                status: 0 //0.待处理  1.进行中  2.已完成
             },
             columns: [{
                     key: 'orderNumber',
@@ -80,7 +80,7 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.openModalEdit(params)
+                                        this.openModalEdit(params.row)
                                     }
                                 }
                             }, '发货'),
@@ -91,7 +91,7 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.deleteContarct(params)
+                                        this.deleteContarct(params.row)
                                     }
                                 }
                             }, '删除')
@@ -109,7 +109,7 @@ export default {
                 page: p ? p : this.query.page,
                 rows: this.query.rows,
                 orderNumber: this.value1,
-                status:this.query.status
+                status: this.query.status
             }
             this.query.page = p ? p : this.query.page;
             this.$http.getOrder(req)
@@ -126,16 +126,17 @@ export default {
                     if (res.data.success) {
                         this.data = res.data.rows.map(el => {
                             return {
+                                id: el.id,
                                 orderNumber: el.orderNumber,
                                 consignee: el.consignee,
                                 contact: el.contact,
                                 shippingAddress: el.shippingAddress,
                                 receivingAddress: el.receivingAddress,
                                 orderMoney: el.orderMoney,
-                                orderTime:el.orderTime.slice(0,10)
+                                orderTime: el.orderTime.slice(0, 10)
                             }
                         })
-                    }else{
+                    } else {
                         this.data = []
                     }
 
@@ -163,54 +164,46 @@ export default {
         },
         // 新增提交
         ok(obj) {
-            this.modalEdit.open = false
-            // let req = {
-            //     contractNumber: obj.contractNumber,
-            //     contractName: obj.contractName,
-            //     customerName: obj.customerName,
-            //     customerManager: obj.customerManager,
-            //     signTime: obj.signTime.getTime(),
-            //     saleManager: obj.saleManager,
-            //     startTime: obj.startTime.getTime(),
-            //     expireTime: obj.expireTime.getTime(),
-            //     contractMoney: obj.contractMoney,
-            //     attachmentName: obj.attachmentName,
-            //     attachmentUrl: obj.attachmentUrl
-            // }
-            // this.$http.getContractAdd(req)
-            //     .then(res => {
-            //         if (res.data.success) {
-            //             this.search();
-            //             this.add.open = false;
-            //             this.$popSuccess('新增合同成功')
-            //         }
-            //     })
+            this.modalEdit.open = false;
+            let req = {
+                id: this.params.id,
+                lineArrangementId: obj.lineArrangementId,
+                responsible: obj.responsible,
+                servicePhone: obj.servicePhone,
+                vehicleNumber: obj.vehicleNumber,
+                pickNumber:obj.pickNumber,
+                status:1
+            }
+            this.$http.getGoods(req)
+                .then(res => {
+                    if (res.data.success) {
+                        // this.search()
+                        this.$router.push({path:'/nav/DoingOrder'})
+                    }
+                })
+            
         },
         cancel() {
             this.modalEdit.open = false
         },
         //删除
         deleteContarct(row) {
-            this.$Modal.confirm({
-                title: '删除订单',
-                content: '确认要删除这条订单吗？',
-                loading: true
-                // onOk: () => {
-                //     this.$http.getContractDelete({
-                //         contractId: row.contractId
-                //     }).then((res) => {
-                //         this.tableLoading = false
-                //         if (res && res.data.success) {
-                //             this.$popSuccess()
-                //             this.search()
-                //             this.$Modal.remove()
-                //         } else {
-                //             this.$popError(res.data.message)
-                //             this.$Modal.remove()
-                //         }
-                //     })
-                // }
-            })
+            var msg = "您真的确定要删除吗？ 请确认！"
+            if (confirm(msg) == true) {
+                this.$http.getOrderDelete({
+                    id: row.id
+                }).then((res) => {
+                    this.tableLoading = false
+                    if (res && res.data.success) {
+                        this.$popSuccess(res.data.message)
+                        this.search()
+                    } else {
+                        this.$popError(res.data.message)
+                    }
+                })
+            } else {
+                return false;
+            }
         }
     },
     mounted() {

@@ -56,7 +56,7 @@
         </div>
   </div>
 </template>
-<script>   
+<script>  
   export default {
     data(){
       return {
@@ -64,7 +64,8 @@
         password:"",
         registerName:'',
         registerPassword:'',
-        requirePassword:''
+				requirePassword:''
+			
       }
     },
     methods:{
@@ -72,10 +73,8 @@
 					if(this.username != '' && this.password !=''){
 						const query = {"username":this.username,"password":this.password}
 						this.$http.login(query).then((res) => {
-							console.log(res)
 							if(res.data.code == 1){
-								this.$router.push({path: `/nav/DoingOrder`})
-								// this.$router.push({path: '/nav/details'});
+								this.$router.push({path: `/nav/HandleOrder`})
 							}else{
 								this.username = "",
 								this.password = '',
@@ -107,15 +106,14 @@
 						}
 					})
 				}
-			},
-      clear(){
-        this.username = "",
-        this.password = ""
-      },
-    },
-    mounted(){
-     
-    }
+			}
+		},
+		mounted(){
+			var username = this.username;
+			var password = this.password
+			localStorage.setItem("username", username)
+			localStorage.setItem("password", password)
+		}
   }
 </script>
 <style>

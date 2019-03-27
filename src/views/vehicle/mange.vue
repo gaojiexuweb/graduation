@@ -9,13 +9,13 @@
         <Page :total="total" :current="query.page" :page-size="query.rows" @on-change="search" show-total show-sizer show-elevator @on-page-size-change="pageSizeChangeHandler" placement="top" class="page">
         </Page>
         <AddInfoModal :open="add.open" :okAdd="okAdd" :cancel="cancel"></AddInfoModal>
-        <ModalEdit :open="modalEdit.open" :ok="ok" :cancel="cancel" :params="params"></ModalEdit>
+        <ModalEdit :open="modalEdit.open" :ok="ok" :cancel="cancel" :params='params'></ModalEdit>
     </div>
 </template>
 
 <script>
-import ModalEdit from './updateModal.vue';
-import AddInfoModal from './addModal.vue'
+import ModalEdit from './editMangeModal.vue';
+import AddInfoModal from './addMangeModal.vue'
 export default {
     data() {
         return {
@@ -34,17 +34,34 @@ export default {
                 rows: 10,
                 status: 0
             },
+            lines: [],
             columns: [{
+                    key: 'vehicleNumber',
+                    title: '车辆编号'
+                },
+                {
+                    key: 'responsible',
+                    title: '负责人'
+                },
+                {
                     key: 'lineArrangement',
-                    title: '线路'
+                    title: '线路安排'
                 },
                 {
-                    key: 'largeMoney',
-                    title: '大件(元/件)'
+                    key: 'servicePhone',
+                    title: '客服电话'
                 },
                 {
-                    key: 'smallMoney',
-                    title: '小件(元/件)'
+                    key: 'status',
+                    title: '状态'
+                },
+                {
+                    key: 'largeNumber',
+                    title: ' 大件格数'
+                },
+                {
+                    key: 'smallNumber',
+                    title: ' 小件格数'
                 },
                 {
                     title: '操作',
@@ -91,10 +108,11 @@ export default {
             let req = {
                 page: p ? p : this.query.page,
                 rows: this.query.rows,
-                lineArrangement: this.value1
+                vehicleNumber: this.value1
+                // status: this.query.status
             }
-            this.query.page = p ? p : this.query.page
-            this.$http.getPrice(req)
+            this.query.page = p ? p : this.query.page;
+            this.$http.getVehicleInformation(req)
                 .then(res => {
                     if (res.data.rows.length == 0) {
                         if (this.query.page > 1) {
@@ -109,15 +127,20 @@ export default {
                         this.data = res.data.rows.map(el => {
                             return {
                                 id: el.id,
-                                lineArrangement: el.lineArrangement,
-                                largeMoney: el.largeMoney,
-                                smallMoney: el.smallMoney
+                                vehicleNumber: el.vehicleNumber,
+                                responsible: el.responsible,
+                                lineArrangement: this.lines.filter(ol => Number(ol.id) === Number(el.lineArrangementId))[0].lineArrangement,
+                                lineArrangementId: el.lineArrangementId,
+                                servicePhone: el.servicePhone,
+                                status: el.status,
+                                largeNumber: el.largeNumber,
+                                smallNumber: el.smallNumber
                             }
                         })
                     } else {
-                        this.data = [];
-                        console.log(this.data)
+                        this.data = []
                     }
+
                     this.total = res.data.records;
 
                 })
@@ -128,11 +151,11 @@ export default {
             this.search();
         },
         refresh() {
-            this.value1 = '';
+            this.value1 = ''
             this.search()
         },
         //编辑弹窗打开
-        openModalEdit(row) { 
+        openModalEdit(row) {
             this.modalEdit.open = true;
             this.params = row;
         },
@@ -142,35 +165,42 @@ export default {
         },
         // 新增
         okAdd(obj) {
+            this.add.open = false;
+            console.log(obj)
             let req = {
-                lineArrangement: obj.lineArrangement,
-                largeMoney: obj.largeMoney,
-                smallMoney: obj.smallMoney
+                vehicleNumber: obj.vehicleNumber,
+                responsible: obj.responsible,
+                lineArrangementId: obj.lineArrangementId,
+                servicePhone: obj.servicePhone,
+                largeNumber: obj.largeNumber,
+                smallNumber: obj.smallNumber,
+                status:'休息中'
             }
-            this.$http.getPriceAdd(req)
+            this.$http.getVehicleMangeAdd(req)
                 .then(res => {
                     if (res.data.code === 1) {
-                        this.add.open = false;
-                        this.$popSuccess('新增价格成功');
                         this.search();
+                        this.add.open = false;
+                        this.$popSuccess('新增车辆成功')
                     }
                 })
         },
         // 编辑提交
         ok(obj) {
-            this.modalEdit.open = false
+            this.modalEdit.open = false;
             let req = {
                 id: obj.id,
-                lineArrangement: obj.lineArrangement,
-                largeMoney: obj.largeMoney,
-                smallMoney: obj.smallMoney
+                lineArrangementId: obj.lineArrangementId,
+                responsible: obj.responsible,
+                servicePhone: obj.servicePhone,
+                status: obj.status
             }
-            this.$http.getPriceUpdate(req)
+            this.$http.getVehicleMangeUpdate(req)
                 .then(res => {
-                    if (res.data.code === 1) {
-                        this.add.open = false;
-                        this.$popSuccess('新增价格成功');
+                    if (res.data.success) {
                         this.search();
+                        this.add.open = false;
+                        this.$popSuccess('编辑成功')
                     }
                 })
         },
@@ -182,8 +212,7 @@ export default {
         deleteContarct(row) {
             var msg = "您真的确定要删除吗？ 请确认！"
             if (confirm(msg) == true) {
-                // return true;  
-                this.$http.getPriceDelete({
+                this.$http.getVehicleMangeDelete({
                     id: row.id
                 }).then((res) => {
                     this.tableLoading = false
@@ -197,11 +226,22 @@ export default {
             } else {
                 return false;
             }
+        },
+        //查询线路
+         getLine(){
+             this.$http.getLine()
+                .then(res => {
+                    if (res.data.success) {
+                        this.lines = res.data.result;
+                    } 
+                })
         }
+    },
+    created() {
+        this.getLine()
     },
     mounted() {
         this.search();
-        // this.getContractSaleFind()
     },
     components: {
         AddInfoModal,

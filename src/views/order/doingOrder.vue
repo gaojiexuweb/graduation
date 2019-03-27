@@ -77,7 +77,7 @@ export default {
                 }
             ],
             data: [],
-            saleList: []
+            lineList: []
         }
     },
     methods: {
@@ -113,16 +113,15 @@ export default {
                                 servicePhone: el.servicePhone,
                                 vehicleNumber: el.vehicleNumber,
                                 pickNumber: el.pickNumber,
-                                lineArrangement: el.lineArrangement,
+                                // lineArrangement: el.lineArrangement,
+                                lineArrangement: this.lineList.filter(ol => Number(ol.id) === Number(el.lineArrangementId))[0].lineArrangement,
                                 orderMoney: el.orderMoney
                             }
                         })
                     } else {
                         this.data = []
                     }
-
                     this.total = res.data.records;
-
                 })
         },
         pageSizeChangeHandler(t) {
@@ -134,74 +133,20 @@ export default {
             this.value1 = ''
             this.search()
         },
-        //编辑弹窗打开
-        openModalEdit(row) {
-            this.modalEdit.open = true;
-            this.params = row;
-        },
-        // 打开新增工单弹窗  获取问题类型列表
-        openModalAdd() {
-            this.add.open = true;
-        },
-        // 新增提交
-        ok(obj) {
-            let req = {
-                contractNumber: obj.contractNumber,
-                contractName: obj.contractName,
-                customerName: obj.customerName,
-                customerManager: obj.customerManager,
-                signTime: obj.signTime.getTime(),
-                saleManager: obj.saleManager,
-                startTime: obj.startTime.getTime(),
-                expireTime: obj.expireTime.getTime(),
-                contractMoney: obj.contractMoney,
-                attachmentName: obj.attachmentName,
-                attachmentUrl: obj.attachmentUrl
-            }
-            this.$http.getContractAdd(req)
+        // 获取线路
+        getLine() {
+            this.$http.getLine()
                 .then(res => {
                     if (res.data.success) {
-                        this.search();
-                        this.add.open = false;
-                        this.$popSuccess('新增合同成功')
+                        this.lineList = res.data.result;
                     }
                 })
-        },
-        cancel() {
-            this.add.open = false;
-            this.modalEdit.open = false
-        },
-        //删除
-        deleteContarct(row) {
-            this.$Modal.confirm({
-                title: '删除订单',
-                content: '确认要删除这条订单吗？',
-                loading: true
-                // onOk: () => {
-                //     this.$http.getContractDelete({
-                //         contractId: row.contractId
-                //     }).then((res) => {
-                //         this.tableLoading = false
-                //         if (res && res.data.success) {
-                //             this.$popSuccess()
-                //             this.search()
-                //             this.$Modal.remove()
-                //         } else {
-                //             this.$popError(res.data.message)
-                //             this.$Modal.remove()
-                //         }
-                //     })
-                // }
-            })
         }
+
     },
     mounted() {
+        this.getLine()
         this.search();
-        // this.getContractSaleFind()
-    },
-    components: {
-        // ContractAdd,
-        // ModalEdit
     }
 }
 </script>

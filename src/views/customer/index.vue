@@ -5,10 +5,10 @@
         <p slot="title">个人信息</p>
         <Form ref="formCustom" :model="formCustom" :label-width="80">
             <FormItem label="用户名：" prop="username">
-                <Input type="username" v-model="formCustom.username"></Input>
+                <Input type="text" v-model="formCustom.username"></Input>
             </FormItem>
             <FormItem label="密码：" prop="password">
-                <Input type="password" v-model="formCustom.password"></Input>
+                <Input type="text" v-model="formCustom.password"></Input>
             </FormItem>
             <FormItem label="性别：" prop="sex">
                 <Input type="text" v-model="formCustom.sex"></Input>
@@ -37,6 +37,9 @@ export default {
                 phone:''
             }
         }
+    },
+    mounted(){
+        console.log(localStorage.getItem("a"))
     }
 }
 </script>

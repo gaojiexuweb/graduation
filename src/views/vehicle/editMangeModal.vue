@@ -1,39 +1,28 @@
 <template>
-<Modal :value="open" title="发货管理" :loading="loading" @on-cancel="cancel">
+<Modal :value="open" title="编辑信息" :loading="loading" @on-cancel="cancel">
     <footer slot="footer">
         <!-- slot设置之后本身的无用    对话框标题，如果使用 slot 自定义了页头，则 title 无效 -->
         <Button @click="cancel">取消</Button>
         <Button @click="commit(sendObj)" type="primary">确定</Button>
     </footer>
     <Form ref="formInline" :model="sendObj" :label-width="100">
+        <FormItem prop="vehicleNumber" label="车辆编号" required>
+            <Input v-model="sendObj.vehicleNumber" type="text" disabled></Input>
+        </FormItem>
         <FormItem prop="lineArrangementId" label="线路安排" required>
             <Select v-model="sendObj.lineArrangementId" @on-change="opt">
                 <Option v-for="item in lineList" :value="item.id" :key="item.id">{{ item.lineArrangement }}</Option>
             </Select>
-        </FormItem>
-        <FormItem prop="vehicleNumber" label="车辆编号" required>
-            <Select v-model="sendObj.vehicleNumber" @on-change="vehicleNumber">
-                    <Option v-for="item in VList" :value="item.vehicleNumber" :key="item.id">
-                        {{ item.vehicleNumber }}
-                    </Option>
-                </Select>
+            <!-- <Input v-model="sendObj.lineArrangement" type="text"></Input> -->
         </FormItem>
         <FormItem prop="responsible" label="负责人" required>
-            <Select v-model="sendObj.responsible"  @on-change="responsible">
-                    <Option v-for="item in RList" :value="item.responsible" :key="item.id">
-                        {{ item.responsible }}
-                    </Option>
-                </Select>
+            <Input v-model="sendObj.responsible" type="text"></Input>
         </FormItem>
         <FormItem prop="servicePhone" label="客服号码" required>
-            <Select v-model="sendObj.servicePhone"  @on-change="servicePhone">
-                    <Option v-for="item in PList" :value="item.servicePhone" :key="item.id">
-                        {{ item.servicePhone }}
-                    </Option>
-                </Select>
+            <Input v-model="sendObj.servicePhone" type="text"></Input>
         </FormItem>
-        <FormItem label="取件号" prop="pickNumber" required>
-            <Input v-model="sendObj.pickNumber" type="text"></Input>
+        <FormItem prop="status" label="状态" required>
+            <Input v-model="sendObj.status" type="text"></Input>
         </FormItem>
     </Form>
 </Modal>
@@ -44,18 +33,16 @@ export default {
     data() {
         return {
             sendObj: {
-                lineArrangementId: '',
-                // lineArrangement: "",
+                lineArrangement: "",
+                lineArrangementId:'',
+                id:'',
                 vehicleNumber: "",
                 responsible: "",
                 servicePhone: "",
-                pickNumber: ''
+                status: ''
             },
             loading: true,
-            lineList: [],
-            VList: [],
-            RList:[],
-            PList:[]
+            lineList:[]
         };
     },
     props: {
@@ -73,14 +60,17 @@ export default {
             type: Function,
             required: true,
             default: () => {}
+        },
+        params: {
+            type: Object,
+            required: true,
+            default: () => {}
         }
     },
     watch: {
         open(val) {
-            this.getLine();
-            this.getVNumber();
-            this.getResponse();
-            this.getPhone();
+            this.sendObj = JSON.parse(JSON.stringify(this.params));
+            this.getLine()
         }
     },
     methods: {
@@ -115,53 +105,16 @@ export default {
                 this.loading = true;
             });
         },
-        // 获取线路
-        getLine() {
-            this.$http.getLine()
+        getLine(){
+             this.$http.getLine()
                 .then(res => {
                     if (res.data.success) {
                         this.lineList = res.data.result;
-                    }
+                    } 
                 })
         },
-        opt(val) {
+        opt(val){
             this.sendObj.lineArrangementId = val;
-        },
-        vehicleNumber(val) {
-            this.sendObj.vehicleNumber = val;
-        },
-        responsible(val) {
-            this.sendObj.responsible = val;
-        },
-        servicePhone(val) {
-            this.sendObj.servicePhone = val;
-        },
-        // 获取车辆编号
-        getVNumber() {
-            this.$http.getVNumber()
-                .then(res => {
-                    if (res.data.success) {
-                        this.VList = res.data.result;
-                    }
-                })
-        },
-        // 获取负责人
-        getResponse() {
-            this.$http.getResponse()
-                .then(res => {
-                    if (res.data.success) {
-                        this.RList = res.data.result;
-                    }
-                })
-        },
-        // 获取客服号码
-        getPhone() {
-            this.$http.getPhone()
-                .then(res => {
-                    if (res.data.success) {
-                        this.PList = res.data.result;
-                    }
-                })
         }
     }
 };

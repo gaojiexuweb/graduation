@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import ModalEdit from './updateModal.vue';
-import AddInfoModal from './addModal.vue'
+import ModalEdit from './editConfigModal.vue';
+import AddInfoModal from './addConfigModal.vue'
 export default {
     data() {
         return {
@@ -35,16 +35,36 @@ export default {
                 status: 0
             },
             columns: [{
-                    key: 'lineArrangement',
-                    title: '线路'
+                    key: 'vehicleType',
+                    title: '车辆型号'
                 },
                 {
-                    key: 'largeMoney',
-                    title: '大件(元/件)'
+                    key: 'vehicleNumber',
+                    title: '车辆编号'
                 },
                 {
-                    key: 'smallMoney',
-                    title: '小件(元/件)'
+                    key: 'largeNumber',
+                    title: ' 大件格数'
+                },
+                {
+                    key: 'smallNumber',
+                    title: ' 小件格数'
+                },
+                {
+                    key: 'color',
+                    title: ' 颜色'
+                },
+                {
+                    key: 'length',
+                    title: ' 长度(cm)'
+                },
+                {
+                    key: 'width',
+                    title: ' 宽度(cm)'
+                },
+                {
+                    key: 'height',
+                    title: ' 高度(cm)'
                 },
                 {
                     title: '操作',
@@ -91,10 +111,10 @@ export default {
             let req = {
                 page: p ? p : this.query.page,
                 rows: this.query.rows,
-                lineArrangement: this.value1
+                vehicleType: this.value1
             }
             this.query.page = p ? p : this.query.page
-            this.$http.getPrice(req)
+            this.$http.getVehicleConfiguration(req)
                 .then(res => {
                     if (res.data.rows.length == 0) {
                         if (this.query.page > 1) {
@@ -109,14 +129,18 @@ export default {
                         this.data = res.data.rows.map(el => {
                             return {
                                 id: el.id,
-                                lineArrangement: el.lineArrangement,
-                                largeMoney: el.largeMoney,
-                                smallMoney: el.smallMoney
+                                vehicleType: el.vehicleType,
+                                vehicleNumber: el.vehicleNumber,
+                                largeNumber: el.largeNumber,
+                                smallNumber: el.smallNumber,
+                                color: el.color,
+                                length: el.length,
+                                width: el.width,
+                                height: el.height
                             }
                         })
                     } else {
-                        this.data = [];
-                        console.log(this.data)
+                        this.data = []
                     }
                     this.total = res.data.records;
 
@@ -132,7 +156,7 @@ export default {
             this.search()
         },
         //编辑弹窗打开
-        openModalEdit(row) { 
+        openModalEdit(row) {
             this.modalEdit.open = true;
             this.params = row;
         },
@@ -142,35 +166,48 @@ export default {
         },
         // 新增
         okAdd(obj) {
+            this.add.open = false;
             let req = {
-                lineArrangement: obj.lineArrangement,
-                largeMoney: obj.largeMoney,
-                smallMoney: obj.smallMoney
+                vehicleType: obj.vehicleType,
+                vehicleNumber: obj.vehicleNumber,
+                largeNumber: obj.largeNumber,
+                smallNumber: obj.smallNumber,
+                color: obj.color,
+                length: obj.length,
+                width: obj.width,
+                height: obj.height
             }
-            this.$http.getPriceAdd(req)
+            this.$http.getVehicleConfigAdd(req)
                 .then(res => {
                     if (res.data.code === 1) {
-                        this.add.open = false;
-                        this.$popSuccess('新增价格成功');
                         this.search();
+                        this.add.open = false;
+                        this.$popSuccess('新增成功')
                     }
                 })
         },
         // 编辑提交
         ok(obj) {
-            this.modalEdit.open = false
+            this.modalEdit.open = false;
             let req = {
                 id: obj.id,
-                lineArrangement: obj.lineArrangement,
-                largeMoney: obj.largeMoney,
-                smallMoney: obj.smallMoney
+                vehicleType: obj.vehicleType,
+                vehicleNumber: obj.vehicleNumber,
+                largeNumber: obj.largeNumber,
+                smallNumber: obj.smallNumber,
+                color: obj.color,
+                length: obj.length,
+                width: obj.width,
+                height: obj.height
             }
-            this.$http.getPriceUpdate(req)
+            console.log(req)
+            this.$http.getVehicleConfigUpdate(req)
                 .then(res => {
-                    if (res.data.code === 1) {
-                        this.add.open = false;
-                        this.$popSuccess('新增价格成功');
+                    console.log(123)
+                    if (res.data.success) {
                         this.search();
+                        this.modalEdit.open = false;
+                        this.$popSuccess('编辑成功')
                     }
                 })
         },
@@ -182,8 +219,7 @@ export default {
         deleteContarct(row) {
             var msg = "您真的确定要删除吗？ 请确认！"
             if (confirm(msg) == true) {
-                // return true;  
-                this.$http.getPriceDelete({
+                this.$http.getVehicleConfigDelete({
                     id: row.id
                 }).then((res) => {
                     this.tableLoading = false
@@ -215,6 +251,7 @@ export default {
     .top {
         margin-bottom: 20px;
         text-align: left;
+
     }
 }
 </style>
