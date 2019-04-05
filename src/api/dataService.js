@@ -105,5 +105,12 @@ export default {
   // 订单发货
   getGoods(req){
     return doGetRequest('/price/goods',req)
+  },
+  // 保存信息
+  getInfo(req){
+    return doGetRequest('/user/info',req)
+  },// 查询信息
+  getTips(req){
+    return doGetRequest('/user/tips',req)
   }
 }

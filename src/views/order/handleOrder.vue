@@ -60,10 +60,6 @@ export default {
                     title: '下单时间'
                 },
                 {
-                    key: 'orderMoney',
-                    title: '金额(元)'
-                },
-                {
                     title: '操作',
                     key: 'action',
                     width: 150,
@@ -172,6 +168,7 @@ export default {
                 servicePhone: obj.servicePhone,
                 vehicleNumber: obj.vehicleNumber,
                 pickNumber:obj.pickNumber,
+                orderMoney:obj.orderMoney,
                 status:1
             }
             this.$http.getGoods(req)

@@ -45,7 +45,7 @@ export default {
                 },
                 {
                     key: 'lineArrangement',
-                    title: '线路安排'
+                    title: '范围安排'
                 },
                 {
                     key: 'servicePhone',
@@ -227,7 +227,7 @@ export default {
                 return false;
             }
         },
-        //查询线路
+        //查询范围
          getLine(){
              this.$http.getLine()
                 .then(res => {

@@ -86,29 +86,7 @@ export default {
     },
     methods: {
         commit(sendObj) {
-            // if (!this.sendObj.lineArrangement) {
-            //     this.$popError('请选择线路安排');
-            //     this.changeLoading()
-            //     return
-            // } else if (!this.sendObj.vehicleNumber) {
-            //     this.$popError('请选择车辆编号');
-            //     this.changeLoading()
-            //     return
-            // } else if (!this.sendObj.responsible) {
-            //     this.$popError('请选择负责人');
-            //     this.changeLoading()
-            //     return
-            // } else if (!this.sendObj.servicePhone) {
-            //     this.$popError('请选择电话号码');
-            //     this.changeLoading()
-            //     return
-            // } else if (!this.sendObj.servicePhone) {
-            //     this.$popError('请输入取件号码');
-            //     this.changeLoading()
-            //     return
-            // } else {
             this.okAdd(sendObj);
-            // }
         },
         changeLoading() {
             this.loading = false;

@@ -14,9 +14,14 @@ import 'iview/dist/styles/iview.css';
 import 'jquery'
 import 'bootstrap'
 import "bootstrap/dist/css/bootstrap.css";
+import BaiduMap from 'vue-baidu-map'
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.use(iView);
+Vue.use(BaiduMap, {
+  // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
+  ak: 'YOUR_APP_KEY'
+})
 
 axios.default.withCredentials = true
 Vue.prototype.axios = axios

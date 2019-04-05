@@ -10,6 +10,8 @@ import config from './views/vehicle/config.vue'
 import Price from './views/price/index.vue'
 import Customer from './views/customer/index.vue'
 import NotFound from './views/404.vue'
+import Map from './views/order/map.vue'
+import MspB from './views/order/mapb.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -19,6 +21,8 @@ export default new Router({
     {path: '/', redirect: '/login'},
     {path:'/login',name:'login',component:Login,meta:{KeepAlive:true}},
     {path:'*',name:'/404',component:NotFound},
+    {path:'/map',name:'map',component:Map},
+    {path:'/mapb/:receivingAddress',name:'mapbp',component:MspB},
     {path:'/nav',name:"nav",component:Nav,
     children:
       [

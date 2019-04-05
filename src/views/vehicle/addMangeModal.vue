@@ -9,7 +9,7 @@
          <FormItem prop="vehicleNumber" label="车辆编号" required>
               <Input v-model="sendObj.vehicleNumber" type="text"></Input>
         </FormItem>
-        <FormItem prop="lineArrangementId" label="线路安排" required>
+        <FormItem prop="lineArrangementId" label="范围安排" required>
            <Select v-model="sendObj.lineArrangementId" @on-change="opt">
                 <Option v-for="item in lineList" :value="item.id" :key="item.id">{{ item.lineArrangement }}</Option>
             </Select>
@@ -81,7 +81,7 @@ export default {
     methods: {
         commit(sendObj) {
             if (!this.sendObj.lineArrangementId) {
-                this.$popError('请选择线路安排');
+                this.$popError('请选择范围安排');
                 this.changeLoading()
                 return
             } else if (!this.sendObj.vehicleNumber) {

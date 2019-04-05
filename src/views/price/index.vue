@@ -36,7 +36,7 @@ export default {
             },
             columns: [{
                     key: 'lineArrangement',
-                    title: '线路'
+                    title: '范围'
                 },
                 {
                     key: 'largeMoney',

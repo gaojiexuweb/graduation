@@ -3,52 +3,49 @@
       <div class="jq22-container" style="padding-top:100px">
           <div class="login-wrap">
             <div class="login-html">
-              <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
-              <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
+              <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">登 陆  </label>
+              <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">  注 册</label>
               <div class="login-form">
                 <!-- 登录页面 -->
                 <div class="sign-in-htm">
                   <div class="group">
-                    <label for="user" class="label">Username</label>
+                    <label for="user" class="label">用 户 名</label>
                     <input id="user" type="text" class="input"  name="username" v-model="username" placeholder="请输入用户姓名">
                   </div>
                   <div class="group">
-                    <label for="pass" class="label">Password</label>
+                    <label for="pass" class="label">密 码</label>
                     <input id="pass" type="password" class="input" data-type="password" name="password" v-model="password" placeholder="请输入用户密码">
                   </div>
                   <div class="group">
                     <input id="check" type="checkbox" class="check" checked>
-                    <label for="check"><span class="icon"></span> Keep me Signed in</label>
+                    <label for="check"><span class="icon"></span>记 住 密 码</label>
                   </div>
                   <div class="group">
-                    <button class="button" @click="jump">Sign In</button>
+                    <button class="button" @click="jump">登 陆</button>
                   </div>
                   <div class="hr"></div>
                   <div class="foot-lnk">
-                    <a href="#forgot">Forgot Password?</a>
+                    <a href="#forgot">忘 记 密 码?</a>
                   </div>
                 </div>
                 <!-- 注册页面 -->
                 <div class="sign-up-htm">
                   <div class="group">
-                    <label for="user" class="label">Username</label>
+                    <label for="user" class="label">用 户 名</label>
                     <input id="user" type="text" class="input" v-model="registerName" name="username">
                   </div>
                   <div class="group">
-                    <label for="pass" class="label">Password</label>
+                    <label for="pass" class="label">密 码</label>
                     <input id="pass" type="password" class="input" data-type="password" v-model="registerPassword" name="password">
                   </div>
                   <div class="group">
-                    <label for="pass" class="label">Repeat Password</label>
+                    <label for="pass" class="label">确 认 密 码</label>
                     <input id="pass" type="password" class="input" data-type="password" v-model='requirePassword'>
                   </div>
                   <div class="group">
-                    <button class="button" @click.prevent="register()">Sign Up</button>
+                    <button class="button" @click.prevent="register()">登 陆</button>
                   </div>
                   <div class="hr"></div>
-                  <div class="foot-lnk">
-                    <label for="tab-1">Already Member?</label>
-                  </div>
                 </div>
               </div>
             </div>
@@ -74,6 +71,10 @@
 						const query = {"username":this.username,"password":this.password}
 						this.$http.login(query).then((res) => {
 							if(res.data.code == 1){
+							var u = this.username;
+							var p = this.password;
+							localStorage.setItem("u", u)
+							localStorage.setItem("p", p)
 								this.$router.push({path: `/nav/HandleOrder`})
 							}else{
 								this.username = "",
@@ -107,12 +108,6 @@
 					})
 				}
 			}
-		},
-		mounted(){
-			var username = this.username;
-			var password = this.password
-			localStorage.setItem("username", username)
-			localStorage.setItem("password", password)
 		}
   }
 </script>

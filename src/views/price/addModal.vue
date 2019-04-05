@@ -6,7 +6,7 @@
         <Button @click="commit(sendObj)" type="primary">确定</Button>
     </footer>
     <Form ref="formInline" :model="sendObj" :label-width="100">
-        <FormItem prop="lineArrangement" label="线路安排" required>
+        <FormItem prop="lineArrangement" label="范围安排" required>
             <Input v-model="sendObj.lineArrangement" type="text"></Input>
         </FormItem>
         <FormItem prop="largeMoney" label="大件(元/件)" required>
@@ -62,7 +62,7 @@ export default {
     methods: {
         commit(sendObj) {
             if (!this.sendObj.lineArrangement) {
-                this.$popError('请选择线路安排');
+                this.$popError('请选择范围安排');
                 this.changeLoading()
                 return
             } else if (!this.sendObj.largeMoney) {

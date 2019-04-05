@@ -6,7 +6,7 @@
         <Button @click="commit(sendObj)" type="primary">确定</Button>
     </footer>
     <Form ref="formInline" :model="sendObj" :label-width="100">
-        <FormItem prop="lineArrangementId" label="线路安排" required>
+        <FormItem prop="lineArrangementId" label="范围安排" required>
             <Select v-model="sendObj.lineArrangementId" @on-change="opt">
                 <Option v-for="item in lineList" :value="item.id" :key="item.id">{{ item.lineArrangement }}</Option>
             </Select>
@@ -35,6 +35,9 @@
         <FormItem label="取件号" prop="pickNumber" required>
             <Input v-model="sendObj.pickNumber" type="text"></Input>
         </FormItem>
+         <FormItem label="金额" prop="orderMoney" required>
+            <Input v-model="sendObj.orderMoney" type="text"></Input>
+        </FormItem>
     </Form>
 </Modal>
 </template>
@@ -49,7 +52,8 @@ export default {
                 vehicleNumber: "",
                 responsible: "",
                 servicePhone: "",
-                pickNumber: ''
+                pickNumber: '',
+                orderMoney:''
             },
             loading: true,
             lineList: [],
@@ -86,7 +90,7 @@ export default {
     methods: {
         commit(sendObj) {
             if (!this.sendObj.lineArrangementId) {
-                this.$popError('请选择线路安排');
+                this.$popError('请选择范围安排');
                 this.changeLoading()
                 return
             } else if (!this.sendObj.vehicleNumber) {
@@ -105,6 +109,10 @@ export default {
                 this.$popError('请输入取件号码');
                 this.changeLoading()
                 return
+            }  else if (!this.sendObj.orderMoney) {
+                this.$popError('请输入价格');
+                this.changeLoading()
+                return
             } else {
                 this.ok(sendObj);
             }
@@ -115,7 +123,7 @@ export default {
                 this.loading = true;
             });
         },
-        // 获取线路
+        // 获取范围
         getLine() {
             this.$http.getLine()
                 .then(res => {

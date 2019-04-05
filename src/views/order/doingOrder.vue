@@ -32,7 +32,20 @@ export default {
             },
             columns: [{
                     key: 'orderNumber',
-                    title: ' 订单编号'
+                    title: ' 订单编号',
+                    render:(h,params)=>{
+                            return h('a', {
+                                attrs: {
+                                    title: params.row.orderNumber
+                                },
+                                on: {
+                                    click: () => {
+                                    //    this.$router.push('/mapb')
+                                       this.$router.push({name:'mapbp',params:{receivingAddress:params.row.receivingAddress}})
+                                    }
+                                }
+                            },params.row.orderNumber)
+                        }
                 },
                 {
                     key: 'consignee',
@@ -40,11 +53,13 @@ export default {
                 },
                 {
                     key: 'contact',
-                    title: '联系方式'
+                    title: '联系方式',
+                    width:100
                 },
                 {
                     key: 'shippingAddress',
-                    title: '发货地址'
+                    title: '发货地址',
+                    width:160
                 },
                 {
                     key: 'receivingAddress',
@@ -68,7 +83,7 @@ export default {
                 },
                 {
                     key: 'lineArrangement',
-                    title: '线路安排'
+                    title: '范围安排'
                 },
 
                 {
@@ -103,6 +118,7 @@ export default {
                     if (res.data.success) {
                         this.data = res.data.rows.map(el => {
                             return {
+                                id:el.id,
                                 orderNumber: el.orderNumber,
                                 consignee: el.consignee,
                                 contact: el.contact,
@@ -133,7 +149,7 @@ export default {
             this.value1 = ''
             this.search()
         },
-        // 获取线路
+        // 获取范围
         getLine() {
             this.$http.getLine()
                 .then(res => {
