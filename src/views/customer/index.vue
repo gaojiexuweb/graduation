@@ -63,7 +63,7 @@ export default {
         },
         search(){
             let req ={
-                user_name:this.formCustom.username
+                username:this.formCustom.username
             }
              this.$http.getTips(req)
                 .then(res => {
